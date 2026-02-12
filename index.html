@@ -6,90 +6,132 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>مخيمي - إدارة المخيم</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Almarai:wght@300;400;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* الافتراضي (Classic) - تم تحديثه ليكون تدرج رمادي مع الأرجواني الأصلي */
-            --primary-gradient: linear-gradient(135deg, #111827 0%, #1f2937 100%);
-            --accent-color: #8b5cf6;
-            --accent-glow: rgba(139, 92, 246, 0.4);
-            --glass-bg: rgba(255, 255, 255, 0.03);
-            --bg-body: #0a0a0c;
+            --bg-body: #f8fafc;
+            --glass-bg: rgba(255, 255, 255, 0.9);
+            --text-main: #0f172a;
+            --text-second: #334155;
+            --text-muted-custom: #64748b;
+            --accent: #4f46e5;
+            --accent-glow: rgba(79, 70, 229, 0.3);
+            --reg-surface: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
         }
 
-        /* ستايل المحيط (Ocean) */
         [data-theme='ocean'] {
-            --primary-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            --accent-color: #0ea5e9;
-            --accent-glow: rgba(14, 165, 233, 0.4);
-            --glass-bg: rgba(255, 255, 255, 0.03);
             --bg-body: #020617;
+            --glass-bg: rgba(15, 23, 42, 0.95);
+            --text-main: #f8fafc;
+            --text-second: #cbd5e1;
+            --text-muted-custom: #94a3b8;
+            --accent: #38bdf8;
+            --accent-glow: rgba(56, 189, 248, 0.4);
+            --reg-surface: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
         }
 
-        /* ستايل الغابة (Forest) */
-        [data-theme='forest'] {
-            --primary-gradient: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
-            --accent-color: #10b981;
-            --accent-glow: rgba(16, 185, 129, 0.4);
-            --glass-bg: rgba(255, 255, 255, 0.03);
-            --bg-body: #022c22;
+        * {
+            font-family: 'Almarai', 'Tajawal', sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            font-family: 'Tajawal', sans-serif;
-            background: var(--bg-body);
-            color: #f8fafc;
-            margin: 0;
-            overflow-x: hidden;
-            transition: all 0.5s ease;
-        }
-        
-        .bg-vibrant {
-            background: var(--primary-gradient);
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            transition: background-color 0.5s ease, color 0.5s ease;
         }
 
-        .glow {
-            box-shadow: 0 0 15px var(--accent-glow);
-        }
+        .text-main { color: var(--text-main) !important; }
+        .text-second { color: var(--text-second) !important; }
+        .text-muted-custom { color: var(--text-muted-custom) !important; }
+        .text-accent { color: var(--accent) !important; }
 
         .glass {
             background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
         }
 
-        .text-accent { color: var(--accent-color); }
-        .bg-accent { background-color: var(--accent-color); }
-        .border-accent { border-color: var(--accent-color); }
-
-        .btn-glow:hover {
-            box-shadow: 0 0 30px var(--accent-glow);
-            transform: translateY(-2px);
-        }
-
-        /* لوحة الدخول - تدرج رمادي احترافي */
-        .login-card {
-            background: linear-gradient(145deg, rgba(31, 41, 55, 0.9), rgba(17, 24, 39, 0.9));
+        .reg-card {
+            background: var(--reg-surface);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        *::-webkit-scrollbar { display: none; }
-        * { -ms-overflow-style: none; scrollbar-width: none; }
+        .btn-reg {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            box-shadow: 0 10px 20px -5px rgba(79, 70, 229, 0.4);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-reg:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px -5px rgba(79, 70, 229, 0.5);
+            filter: brightness(1.1);
+        }
+
+        .input-reg {
+            background: white;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s ease;
+            color: #1e293b;
+        }
+
+        [data-theme='ocean'] .input-reg {
+            background: rgba(15, 23, 42, 0.5);
+            border-color: rgba(255, 255, 255, 0.1);
+            color: #f8fafc;
+        }
+
+        .badge-num {
+            background: var(--accent);
+            color: white;
+            box-shadow: 0 4px 10px var(--accent-glow);
+        }
+
+        .section-header {
+            background: rgba(79, 70, 229, 0.05);
+            border-right: 4px solid var(--accent);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 10px;
+            opacity: 0.5;
+        }
+
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white !important; color: black !important; }
+            .text-main, .text-second, .text-muted-custom { color: black !important; }
+        }
     </style>
 <script type="importmap">
 {
   "imports": {
-    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
     "react/": "https://esm.sh/react@^19.2.4/",
     "react": "https://esm.sh/react@^19.2.4",
-    "@google/genai": "https://esm.sh/@google/genai@^1.40.0",
-    "recharts": "https://esm.sh/recharts@^3.7.0"
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+    "@google/genai": "https://esm.sh/@google/genai@^1.40.0"
   }
 }
 </script>
 </head>
 <body>
     <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
 </body>
 </html>

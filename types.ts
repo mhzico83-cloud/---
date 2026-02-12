@@ -13,13 +13,15 @@ export interface FamilyMember {
   birthDate: string;
   isPregnant?: boolean;
   isNursing?: boolean;
-  medicalDoc?: string; // Base64 لشهادة الحمل أو الميلاد
+  pregnancyCert?: string; // صورة شهادة الحمل
+  birthCert?: string;      // صورة شهادة الميلاد
+  medicalDoc?: string;
 }
 
 export interface ExternalDependent {
   id: string;
   fullName: string;
-  relation: string; // نصي كما طلب المستخدم
+  relation: string;
   idNumber: string;
   birthDate: string;
 }
@@ -43,7 +45,7 @@ export interface IDP {
   phone: string;
   walletNumber: string;
   addressBefore: string;
-  detailedAddress?: string; // للخارجي
+  detailedAddress?: string;
   housingStatus: HousingStatus;
   shelterType: ShelterType;
   shelterNumber: string;
@@ -69,23 +71,26 @@ export interface IDP {
 
 export type View = 'dashboard' | 'idp-list' | 'aid-services' | 'reports' | 'messages';
 
-// Added Message interface for messaging system
 export interface Message {
   id: string;
   senderId: string;
+  senderName: string; 
   text: string;
   time: string;
+  date: string; 
   isMe: boolean;
 }
 
-// Added Conversation interface for messaging system
 export interface Conversation {
   id: string;
   participantName: string;
   participantAvatar: string;
   lastMessage: string;
   time: string;
+  date: string; 
   unreadCount: number;
   online: boolean;
   messages: Message[];
+  isAlert?: boolean; 
+  senderAdmin?: string; 
 }
